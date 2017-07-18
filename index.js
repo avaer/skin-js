@@ -1120,10 +1120,11 @@ const skin = img => {
 
   const eyePosition = new THREE.Vector3();
   const headEyeQuaternion = new THREE.Quaternion();
+  const headRotationVector = mesh.material.uniforms.headRotation.value;
   const bodyHeadOffset = new THREE.Vector3(0, offsetY, 0);
   mesh.getEyeOffset = () => {
     eyePosition.set(0, 0, -8 / 2);
-    headEyeQuaternion.fromArray(mesh.material.uniforms.headRotation.value);
+    headEyeQuaternion.set(headRotationVector.x, headRotationVector.y, headRotationVector.z, headRotationVector.w);
     eyePosition
       .applyQuaternion(headEyeQuaternion)
       .add(bodyHeadOffset)
