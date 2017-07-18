@@ -373,7 +373,7 @@ const leftArmBox = (() => {
 
     for (let i = 0; i < numPositions; i++) {
       const baseIndex = i * 4;
-      result[baseIndex + 0] = -offset.x;
+      result[baseIndex + 0] = -offset.x; // because we rotate mesh Y by Math.PI
       result[baseIndex + 1] = offset.y;
       result[baseIndex + 2] = offset.z;
       result[baseIndex + 3] = 1;
@@ -852,7 +852,7 @@ const leftArm2Box = (() => {
 
     for (let i = 0; i < numPositions; i++) {
       const baseIndex = i * 4;
-      result[baseIndex + 0] = -offset.x;
+      result[baseIndex + 0] = -offset.x; // because we rotate mesh Y by Math.PI
       result[baseIndex + 1] = offset.y;
       result[baseIndex + 2] = offset.z;
       result[baseIndex + 3] = 1;
@@ -1117,6 +1117,34 @@ const skin = img => {
     new THREE.Vector3(0, 0, 0),
     2
   );
+
+  const eyePosition = new THREE.Vector3();
+  const headEyeQuaternion = new THREE.Quaternion();
+  const bodyHeadOffset = new THREE.Vector3(0, offsetY, 0);
+  mesh.getEyeOffset = () => {
+    eyePosition.set(0, 0, -8 / 2);
+    headEyeQuaternion.fromArray(mesh.material.uniforms.headRotation.value);
+    eyePosition
+      .applyQuaternion(headEyeQuaternion)
+      .add(bodyHeadOffset)
+      .applyQuaternion(mesh.quaternion)
+      .multiply(mesh.scale);
+    return eyePosition;
+  };
+
+  const armPosition = new THREE.Vector3();
+  mesh.getLeftArmOffset = () => {
+    armPosition.set(-6, -10 + 12/2 + offsetY, 0)
+      .applyQuaternion(mesh.quaternion)
+      .multiply(mesh.scale);
+    return armPosition;
+  };
+  mesh.getRightArmOffset = () => {
+    armPosition.set(6, -10 + 12/2 + offsetY, 0)
+      .applyQuaternion(mesh.quaternion)
+      .multiply(mesh.scale);
+    return armPosition;
+  };
 
   mesh.destroy = () => {
     material.dispose();
