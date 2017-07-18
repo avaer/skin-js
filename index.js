@@ -1,5 +1,6 @@
 const scale = 1 / 18;
 const offsetY = 22 + 13.5/2 - 8/2;
+const rotationOrder = 'YXZ';
 
 module.exports = THREE => {
 
@@ -1088,7 +1089,7 @@ const skinGeometry = (() => {
   geometry.addAttribute('dl', new THREE.BufferAttribute(dls, 4));
   geometry.addAttribute('dr', new THREE.BufferAttribute(drs, 4));
   geometry.addAttribute('dy', new THREE.BufferAttribute(dys, 4));
-  geometry.applyMatrix(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(0, Math.PI, 0, 'YXZ')));
+  geometry.applyMatrix(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(0, Math.PI, 0, rotationOrder)));
   return geometry;
 })();
 
@@ -1110,6 +1111,7 @@ const skin = img => {
 
   const mesh = new THREE.Mesh(skinGeometry, material);
   mesh.scale.set(scale, scale, scale);
+  mesh.rotation.order = rotationOrder;
   mesh.updateMatrixWorld();
   mesh.boundingSphere = new THREE.Sphere(
     new THREE.Vector3(0, 0, 0),
