@@ -53,7 +53,7 @@ return vec + 2.0 * cross( cross( vec, quat.xyz ) + quat.w * vec, quat.xyz );
 `,
     "void main() {",
     "  float theta2 = theta * dy.w;",
-    "  vec3 headPosition = dh.w > 0.0 ? (headVisible > 0.0 ?(applyQuaternion(position.xyz - dh.xyz, headRotation) + dh.xyz) : vec3(0.0)) : position.xyz;",
+    "  vec3 headPosition = dh.w > 0.0 ? (headVisible > 0.0 ?(applyQuaternion(position.xyz - vec3(dh.x, dh.y, -dh.z), headRotation) + vec3(dh.x, dh.y, -dh.z)) : vec3(0.0)) : position.xyz;",
     "  vec3 limbPosition = vec3(headPosition.x, headPosition.y - dy.y + (dy.y*cos(theta2) - dy.z*sin(theta2)), headPosition.z + dy.z + (dy.z*cos(theta2) + dy.y*sin(theta2)));",
     "  vec3 leftArmPosition = dl.w > 0.0 ? applyQuaternion(limbPosition.xyz - dl.xyz, leftArmRotation) + dl.xyz : limbPosition.xyz;",
     "  vec3 rightArmPosition = dr.w > 0.0 ? applyQuaternion(leftArmPosition.xyz - dr.xyz, rightArmRotation) + dr.xyz : leftArmPosition.xyz;",
