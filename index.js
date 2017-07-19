@@ -53,7 +53,7 @@ return vec + 2.0 * cross( cross( vec, quat.xyz ) + quat.w * vec, quat.xyz );
 `,
     "void main() {",
     "  float theta2 = theta * dy.w;",
-    "  vec3 headPosition = dh.w > 0.0 ? (headVisible > 0.0 ?(applyQuaternion(position.xyz - vec3(dh.x, dh.y, -dh.z), headRotation) + vec3(dh.x, dh.y, -dh.z)) : vec3(0.0)) : position.xyz;",
+    "  vec3 headPosition = dh.w > 0.0 ? (headVisible > 0.0 ?(applyQuaternion(position.xyz - dh.xyz, headRotation) + dh.xyz) : vec3(0.0)) : position.xyz;",
     "  vec3 limbPosition = vec3(headPosition.x, headPosition.y - dy.y + (dy.y*cos(theta2) - dy.z*sin(theta2)), headPosition.z + dy.z + (dy.z*cos(theta2) + dy.y*sin(theta2)));",
     "  vec3 leftArmPosition = dl.w > 0.0 ? applyQuaternion(limbPosition.xyz - dl.xyz, leftArmRotation) + dl.xyz : limbPosition.xyz;",
     "  vec3 rightArmPosition = dr.w > 0.0 ? applyQuaternion(leftArmPosition.xyz - dr.xyz, rightArmRotation) + dr.xyz : leftArmPosition.xyz;",
@@ -1118,33 +1118,24 @@ const skin = img => {
     2
   );
 
-  const eyePosition = new THREE.Vector3();
-  const headEyeQuaternion = new THREE.Quaternion();
-  const headRotationVector = mesh.material.uniforms.headRotation.value;
-  const bodyHeadOffset = new THREE.Vector3(0, offsetY, 0);
-  mesh.getEyeOffset = () => {
-    eyePosition.set(0, 0, -8 / 2);
-    headEyeQuaternion.set(headRotationVector.x, headRotationVector.y, headRotationVector.z, headRotationVector.w);
-    eyePosition
-      .applyQuaternion(headEyeQuaternion)
-      .add(bodyHeadOffset)
-      .applyQuaternion(mesh.quaternion)
-      .multiply(mesh.scale);
-    return eyePosition;
-  };
+  const head = new THREE.Object3D();
+  head.position.y = offsetY;
+  mesh.add(head);
+  mesh.head = head;
+  const eye = new THREE.Object3D();
+  eye.position.z = -8/2;
+  head.add(eye);
+  mesh.eye = eye;
 
-  const armPosition = new THREE.Vector3();
-  mesh.getLeftArmOffset = () => {
-    armPosition.set(-6, -10 + 12/2 + offsetY, 0)
-      .applyQuaternion(mesh.quaternion)
-      .multiply(mesh.scale);
-    return armPosition;
-  };
-  mesh.getRightArmOffset = () => {
-    armPosition.set(6, -10 + 12/2 + offsetY, 0)
-      .applyQuaternion(mesh.quaternion)
-      .multiply(mesh.scale);
-    return armPosition;
+  const leftArm = new THREE.Object3D();
+  leftArm.position.set(-6, -10 + 12/2 + offsetY, 0);
+  mesh.add(leftArm);
+  const rightArm = new THREE.Object3D();
+  rightArm.position.set(6, -10 + 12/2 + offsetY, 0);
+  mesh.add(rightArm);
+  mesh.arms = {
+    left: leftArm,
+    right: rightArm,
   };
 
   mesh.destroy = () => {
