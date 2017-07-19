@@ -1093,7 +1093,7 @@ const skinGeometry = (() => {
   return geometry;
 })();
 
-const skin = img => {
+const skin = (img, {limbs = false} = {}) => {
   const texture = new THREE.Texture(img);
 	texture.magFilter = THREE.NearestFilter;
 	texture.minFilter = THREE.NearestMipMapNearestFilter;
@@ -1118,25 +1118,27 @@ const skin = img => {
     2
   );
 
-  const head = new THREE.Object3D();
-  head.position.y = offsetY;
-  mesh.add(head);
-  mesh.head = head;
-  const eye = new THREE.Object3D();
-  eye.position.z = -8/2;
-  head.add(eye);
-  mesh.eye = eye;
+  if (limbs) {
+    const head = new THREE.Object3D();
+    head.position.y = offsetY;
+    mesh.add(head);
+    mesh.head = head;
+    const eye = new THREE.Object3D();
+    eye.position.z = -8/2;
+    head.add(eye);
+    mesh.eye = eye;
 
-  const leftArm = new THREE.Object3D();
-  leftArm.position.set(-6, -10 + 12/2 + offsetY, 0);
-  mesh.add(leftArm);
-  const rightArm = new THREE.Object3D();
-  rightArm.position.set(6, -10 + 12/2 + offsetY, 0);
-  mesh.add(rightArm);
-  mesh.arms = {
-    left: leftArm,
-    right: rightArm,
-  };
+    const leftArm = new THREE.Object3D();
+    leftArm.position.set(-6, -10 + 12/2 + offsetY, 0);
+    mesh.add(leftArm);
+    const rightArm = new THREE.Object3D();
+    rightArm.position.set(6, -10 + 12/2 + offsetY, 0);
+    mesh.add(rightArm);
+    mesh.arms = {
+      left: leftArm,
+      right: rightArm,
+    };
+  }
 
   mesh.destroy = () => {
     material.dispose();
