@@ -675,7 +675,7 @@ const body2Box = (() => {
     new THREE.Vector2(0.625, 0.4375),
     new THREE.Vector2(0.5, 0.4375)
   ];
-  const body2Box = new THREE.BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
+  const body2Box = new THREE.BoxGeometry(9, 13.5, 5, 0, 0, 0);
   body2Box.faceVertexUvs[0] = [];
   body2Box.faceVertexUvs[0][0] = [body2Right[3], body2Right[0], body2Right[2]];
   body2Box.faceVertexUvs[0][1] = [body2Right[0], body2Right[1], body2Right[2]];
