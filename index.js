@@ -1151,6 +1151,7 @@ const skin = (img, {limbs = false} = {}) => {
 
   return mesh;
 };
+skin.SKIN_SHADER = SKIN_SHADER;
 
 return skin;
 
