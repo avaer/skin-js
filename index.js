@@ -1102,11 +1102,38 @@ const skinMaterial = new THREE.ShaderMaterial({
 });
 skinMaterial.volatile = true;
 
+const _requestImage = src => new Promise((accept, reject) => {
+  const img = new Image();
+
+  img.onload = () => {
+    accept(img);
+  };
+  img.onerror = err => {
+    reject(img);
+  };
+
+  img.crossOrigin = 'Anonymous';
+  img.src = src;
+});
+
 const skin = (img, {limbs = false} = {}) => {
-  const texture = new THREE.Texture(img);
+  const texture = new THREE.Texture();
 	texture.magFilter = THREE.NearestFilter;
 	texture.minFilter = THREE.NearestMipMapNearestFilter;
-  texture.needsUpdate = true;
+  if (typeof img === 'string') {
+    _requestImage(img)
+      .then(img => {
+        texture.image = img;
+        texture.needsUpdate = true;
+      })
+      .catch(err => {
+        console.warn(err);
+      });
+  } else {
+    texture.image = img;
+    texture.needsUpdate = true;
+  }
+
   const material = skinMaterial;
 
   const mesh = new THREE.Mesh(skinGeometry, material);
