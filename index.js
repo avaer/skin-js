@@ -1109,24 +1109,26 @@ skinMaterial.volatile = true;
 
 const _requestImage = src => new Promise((accept, reject) => {
   const img = new Image();
-
   img.onload = () => {
     accept(img);
   };
   img.onerror = err => {
     reject(img);
   };
-
-  img.crossOrigin = 'Anonymous';
+  // img.crossOrigin = 'Anonymous';
   img.src = src;
 });
+const _requestImageBitmap = src => _requestImage(src)
+  .then(img => createImageBitmap(img, 0, 0, img.width, img.height, {
+    imageOrientation: 'flipY',
+  }));
 
 const skin = (img, {limbs = false} = {}) => {
   const texture = new THREE.Texture();
 	texture.magFilter = THREE.NearestFilter;
 	texture.minFilter = THREE.NearestMipMapNearestFilter;
   if (typeof img === 'string') {
-    _requestImage(img)
+    _requestImageBitmap(img)
       .then(img => {
         texture.image = img;
         texture.needsUpdate = true;
@@ -1175,7 +1177,7 @@ const skin = (img, {limbs = false} = {}) => {
   };
 
   mesh.destroy = () => {
-    material.dispose();
+    // material.dispose();
     texture.dispose();
   };
 
