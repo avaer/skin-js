@@ -922,7 +922,10 @@ const rightLeg2Box = (() => {
     new THREE.Vector2(0.25, 0.4375),
     new THREE.Vector2(0.1875, 0.4375)
   ];
-  const rightLeg2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
+  const rightLeg2Box = new THREE.BoxGeometry(4.5, 12, 4.5, 0, 0, 0);
+  for (let i = 0; i < rightLeg2Box.vertices.length; i++) {
+    rightLeg2Box.vertices[i].y -= 12/2;
+  }
   rightLeg2Box.faceVertexUvs[0] = [];
   rightLeg2Box.faceVertexUvs[0][0] = [rightLeg2Right[3], rightLeg2Right[0], rightLeg2Right[2]];
   rightLeg2Box.faceVertexUvs[0][1] = [rightLeg2Right[0], rightLeg2Right[1], rightLeg2Right[2]];
@@ -998,7 +1001,10 @@ const leftLeg2Box = (() => {
     new THREE.Vector2(0.25, 0.1875),
     new THREE.Vector2(0.1875, 0.1875)
   ];
-  const leftLeg2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
+  const leftLeg2Box = new THREE.BoxGeometry(4.5, 12, 4.5, 0, 0, 0);
+  for (let i = 0; i < leftLeg2Box.vertices.length; i++) {
+    leftLeg2Box.vertices[i].y -= 12/2;
+  }
   leftLeg2Box.faceVertexUvs[0] = [];
   leftLeg2Box.faceVertexUvs[0][0] = [leftLeg2Right[3], leftLeg2Right[0], leftLeg2Right[2]];
   leftLeg2Box.faceVertexUvs[0][1] = [leftLeg2Right[0], leftLeg2Right[1], leftLeg2Right[2]];
