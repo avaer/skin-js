@@ -1135,23 +1135,10 @@ const _requestImageBitmap = src => _requestImage(src)
     imageOrientation: 'flipY',
   }));
 
-const skin = (img, {limbs = false} = {}) => {
+const skin = ({limbs = false} = {}) => {
   const texture = new THREE.Texture();
 	texture.magFilter = THREE.NearestFilter;
 	texture.minFilter = THREE.NearestMipMapNearestFilter;
-  if (typeof img === 'string') {
-    _requestImageBitmap(img)
-      .then(img => {
-        texture.image = img;
-        texture.needsUpdate = true;
-      })
-      .catch(err => {
-        console.warn(err);
-      });
-  } else {
-    texture.image = img;
-    texture.needsUpdate = true;
-  }
 
   const material = skinMaterial;
 
@@ -1159,6 +1146,11 @@ const skin = (img, {limbs = false} = {}) => {
   mesh.scale.set(scale, scale, scale);
   mesh.rotation.order = rotationOrder;
   mesh.updateMatrixWorld();
+
+  mesh.setImage = img => {
+    texture.image = img;
+    texture.needsUpdate = true;
+  };
 
   mesh.size = skinSize;
 
